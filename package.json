@@ -1,0 +1,14 @@
+{
+  "name": "malutka-stories",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Процедурный пиздец с Малютками: чат пишет сюжет, нейронка ставит сцену, Арбуза опять не звали.",
+  "scripts": {
+    "start": "node server/index.js",
+    "stories:local": "node server/index.js",
+    "stories:test": "node server/index.js --test",
+    "test": "node --test"
+  },
+  "engines": { "node": ">=22" }
+}

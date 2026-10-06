@@ -1,0 +1,12 @@
+.local/
+.env
+.env.*
+node_modules/
+.DS_Store
+*.log
+docs/
+AGENTS.md
+CLAUDE.md
+*.plan.md
+dist/
+coverage/

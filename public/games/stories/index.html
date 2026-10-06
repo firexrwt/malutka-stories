@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>ИИ-истории / Малютка Продакшн</title>
+  <link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/games/shell.css">
+  <link rel="stylesheet" href="./stories.css">
+  <script type="module" src="./main.js"></script>
+</head>
+<body>
+  <header class="top"><a href="https://github.com/firexrwt/malutka-stories">← К ИСХОДНИКАМ</a><span>МАЛЮТКА ПРОДАКШН</span><span class="optional">/ STORIES</span></header>
+  <main class="stories">
+    <div class="eyebrow">/03 STORY DEPARTMENT</div>
+    <h1>ЭТОГО НЕ БЫЛО<br>В ПОВЕСТКЕ.</h1>
+    <p class="intro">Ты пишешь - история меняется. Нейронка продолжает разговор, выбирает персонажей, их позы, эмоции и фон. Три завязки, дальше - ваши решения. Только SFW.</p>
+    <section class="connection" aria-label="Подключение">
+      <div class="eyebrow">/ CONNECTION</div>
+      <p id="mode">Подключаемся к игровому отделу…</p>
+      <div id="local-help" hidden>
+        <p>Для игры со своей подпиской запусти сервис на своём компьютере, затем открой локальную демку. Вход посетителей на общем сайте пока ожидает доступа OpenAI.</p>
+        <a class="button" id="local-link" href="http://127.0.0.1:3116/games/stories/">ОТКРЫТЬ ЛОКАЛЬНУЮ ДЕМКУ ↗</a>
+        <details><summary>Как запустить</summary><p>Скачай <a href="https://github.com/firexrwt/malutka-stories">malutka-stories</a>, установи Node.js 22 или новее и запусти <code>npm start</code> в каталоге проекта. На телефоне эта ссылка ведёт к самому телефону: вход выполняется на компьютере игрока.</p></details>
+      </div>
+      <div id="auth" hidden>
+        <p id="account"></p>
+        <label class="consent"><input id="consent" type="checkbox"> Разрешаю демке отправлять запросы по моей подписке ChatGPT. Это использует её лимиты.</label>
+        <div class="auth-actions"><button id="signin" type="button">Continue with ChatGPT</button><button id="logout" type="button" hidden>ВЫЙТИ</button></div>
+        <label id="model-label" hidden>Модель твоего аккаунта <select id="model-select"></select></label>
+        <button id="models-retry" type="button" hidden>ЗАГРУЗИТЬ МОДЕЛИ</button>
+      </div>
+    </section>
+    <div id="connection-feedback"><div id="feedback"><p id="error" class="error" role="alert" hidden></p><p id="status" class="status" role="status" aria-live="polite"></p></div></div>
+    <section id="picker" aria-labelledby="choose-title">
+      <div class="section-head"><h2 id="choose-title">ВЫБЕРИ НЕПРИЯТНОСТЬ</h2><span class="eyebrow">/ THREE SCENES</span></div>
+      <div id="scene-list" class="scene-list"></div>
+    </section>
+    <section id="play" hidden aria-labelledby="scene-title">
+      <div class="section-head"><div><div id="location" class="eyebrow"></div><h2 id="scene-title" tabindex="-1"></h2></div><button id="new" type="button">ДРУГАЯ ИСТОРИЯ</button></div>
+      <div class="play-grid">
+        <aside class="world" aria-label="Визуальная история">
+          <div class="stage-head"><span class="eyebrow">/ ПОСТАНОВКА</span><span id="shot-label" class="eyebrow"></span></div>
+          <div id="stage" class="scene-stage" aria-label="Участники сцены"></div>
+          <p id="direction-caption" class="direction-caption"></p>
+          <details class="world-info"><summary>Предметы и состояние сцены</summary><p id="goal"></p><p id="turns" class="eyebrow"></p><h3>Сейчас в сцене</h3><ul id="facts"></ul><h3>Предметы</h3><ul id="objects"></ul></details>
+        </aside>
+        <div class="story-panel">
+          <div id="history" class="history" role="log" aria-live="polite" aria-relevant="additions" aria-label="История"></div>
+          <div id="outcome" class="outcome" hidden><div class="eyebrow">/ FIN</div><p id="outcome-text"></p><button id="restart" type="button">ЕЩЁ РАЗ</button></div>
+          <div class="role-picker"><label for="speaker-select">От чьего лица пишешь?</label><select id="speaker-select"><option value="player">Ты</option></select><span id="active-speaker" class="eyebrow">Сейчас пишешь: Ты</span></div>
+          <details id="cast-editor" class="cast-editor"><summary>Добавить персонажа <span id="cast-count"></span></summary>
+            <form id="character-form">
+              <label for="character-mode">Персонаж</label><select id="character-mode"><option value="ready">Готовый герой</option><option value="custom">Свой персонаж</option></select>
+              <div id="ready-fields"><label for="character-ready">Кого позвать?</label><select id="character-ready"></select></div>
+              <div id="custom-fields" hidden><label for="character-name">Имя</label><input id="character-name" maxlength="60" placeholder="Например, Лена" autocomplete="off"><label for="character-description">Какой это персонаж? Необязательно</label><input id="character-description" maxlength="240" placeholder="Любопытная гостья, любит спорить о кино" autocomplete="off"></div>
+              <label for="character-presentation">Внешность для своего или случайного героя</label><select id="character-presentation"><option value="auto">Подобрать по имени и контексту</option><option value="male">Мужской образ</option><option value="female">Женский образ</option></select>
+              <p>Имя и характер остаются своими. Внешность подбирается из готовых портретов.</p>
+              <div class="cast-actions"><button id="character-add" type="submit">ДОБАВИТЬ В СЦЕНУ ↗</button><button id="character-random" type="button">СЛУЧАЙНЫЙ ПЕРСОНАЖ ↗</button></div>
+            </form>
+          </details>
+          <div id="play-feedback"></div>
+          <form id="action-form">
+            <label for="action">Что скажешь или сделаешь?</label>
+            <textarea id="action" name="action" maxlength="600" rows="3" placeholder="Давайте по порядку. *осматриваю то, что лежит на столе*" required aria-describedby="input-help"></textarea>
+            <div class="form-foot"><span id="input-help">Речь - обычным текстом, действия - *в звёздочках*. До 600 знаков.</span><button id="submit" type="submit">ПРОДОЛЖИТЬ ↗</button></div>
+            <div id="hints" class="hints" aria-label="Примеры действий"></div>
+          </form>
+          <details id="trace" class="trace"><summary>Для съёмки: разбор последнего хода</summary><pre id="trace-text"></pre></details>
+        </div>
+      </div>
+    </section>
+    <noscript><p class="error">Для этой демки нужен JavaScript.</p></noscript>
+    <footer class="foot">ВСЕ СЦЕНЫ ВЫМЫШЛЕНЫ. СОВПАДЕНИЯ С ПРОТОКОЛОМ СОВЕТА - ПРОБЛЕМА СОВЕТА.</footer>
+  </main>
+</body>
+</html>
